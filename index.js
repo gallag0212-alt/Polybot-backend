@@ -7,7 +7,6 @@ const axios = require('axios');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(require('express').static(require('path').join(__dirname,'public')));
 
 // State bot
 const state = {
@@ -158,6 +157,7 @@ cron.schedule('*/3 * * * *', refreshSignals);
 refreshSignals();
 
 // API
+app.get('/', (req, res) => res.send(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PolyBot</title><style>body{font-family:monospace;background:#05070f;color:#dce8ff;padding:20px;max-width:400px;margin:0 auto}h2{color:#00f5d4}button{display:block;width:100%;padding:15px;margin:10px 0;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}.s{background:#00e676;color:#000}.x{background:#ff4058;color:#fff}.r{background:#1a2340;color:#dce8ff}#d{background:#0f1526;border:1px solid #1a2340;padding:15px;border-radius:10px;margin:15px 0;font-size:12px;line-height:2}.v{color:#00f5d4}</style></head><body><h2>🤖 PolyBot AI</h2><div id="d">Loading...</div><button class="s" onclick="go('/bot/start','POST','Bot aktif!')">▶️ START BOT</button><button class="x" onclick="go('/bot/stop','POST','Bot stop')">⏹ STOP BOT</button><button class="r" onclick="load()">↻ Refresh</button><script>async function load(){const d=await fetch('/status').then(r=>r.json());document.getElementById('d').innerHTML='Bot: <span class="v">'+(d.botActive?'AKTIF':'STOP')+'</span><br>Profit: <span class="v">$'+d.profit.toFixed(2)+'</span><br>Balance: <span class="v">$'+d.balance.toFixed(2)+'</span><br>Trades: <span class="v">'+d.totalTrades+'</span>';}async function go(u,m,msg){await fetch(u,{method:m});alert(msg);load();}load();setInterval(load,10000);</script></body></html>`));
 app.get('/health', (req, res) => res.json({ status:'ok', ts:Date.now(), mode:'simulation' }));
 
 app.get('/status', (req, res) => res.json({
